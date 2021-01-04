@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "860683475173",
+    "project_id": "whatsapp-4d83e",
+    "storage_bucket": "whatsapp-4d83e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:860683475173:android:b2665513b9f6793cf5dc0c",
+        "android_client_info": {
+          "package_name": "br.com.damasceno.whatsapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "860683475173-lfcjlj7d9qi9e0nsl9me5a2ut76bvsbp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA3sv0IbjPJ8p9QAoh7UftCwGvSVy19v7Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "860683475173-lfcjlj7d9qi9e0nsl9me5a2ut76bvsbp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
