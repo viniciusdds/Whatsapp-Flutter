@@ -6,7 +6,9 @@ import 'package:whatsapp/model/Usuario.dart';
 class ValidacaoController {
 
       var verifyName;
-      String mensagem = "";
+      String mengagemErro = "";
+      String email = "";
+      String senha = "";
       Usuario usuario = Usuario();
 
       Future<String> validarCampos(String email, String senha, BuildContext context, String acesso, {String nome}) async{
@@ -34,15 +36,15 @@ class ValidacaoController {
               }
 
           }else{
-              return mensagem = "Preencha uma senha! digite mais de 6 caracteres";
+              return mengagemErro = "Preencha uma senha! digite mais de 6 caracteres";
           }
 
         }else{
-            return mensagem = "Preencha o E-mail utilizando @";
+            return mengagemErro = "Preencha o E-mail utilizando @";
         }
 
       }else{
-           return mensagem = "Preencha o Nome";
+           return mengagemErro = "Preencha o Nome";
       }
     }
 
@@ -65,7 +67,7 @@ class ValidacaoController {
      }).catchError((error){
        //print("erro: "+ error.toString());
 
-        mensagem = "Erro ao cadastrar usuário, verifique os campos e cadastre novamente";
+        mengagemErro = "Erro ao cadastrar usuário, verifique os campos e cadastre novamente";
 
      });
    }
@@ -87,14 +89,14 @@ class ValidacaoController {
 //            )
 //        );
 
-         mensagem = "OK";
+         mengagemErro = "OK";
       }catch(e){
          print("error: "+e);
-         mensagem = "Erro ao autenticar usuário, verifique e-mail e senha e tente novamente!";
-         return mensagem;
+         mengagemErro = "Erro ao autenticar usuário, verifique e-mail e senha e tente novamente!";
+         return mengagemErro;
       }
 
-      return mensagem;
+      return mengagemErro;
 
 
 //      auth.signInWithEmailAndPassword(
@@ -109,17 +111,17 @@ class ValidacaoController {
 //            )
 //        );
 //
-//        mensagem = "OK";
-//        usuario.mensagem = mensagem;
-//        print("mensagem: "+mensagem);
-//        return mensagem;
+//        mengagemErro = "OK";
+//        usuario.mengagemErro = mengagemErro;
+//        print("mengagemErro: "+mengagemErro);
+//        return mengagemErro;
 //
 //      }).catchError((error)  {
 //           print("erro: "+ error.toString());
-//           mensagem = "Erro ao autenticar usuário, verifique e-mail e senha e tente novamente!";
-//           usuario.mensagem = mensagem;
-//           print("mensagem: "+mensagem);
-//           return mensagem;
+//           mengagemErro = "Erro ao autenticar usuário, verifique e-mail e senha e tente novamente!";
+//           usuario.mengagemErro = mengagemErro;
+//           print("mengagemErro: "+mengagemErro);
+//           return mengagemErro;
 //      });
 
 

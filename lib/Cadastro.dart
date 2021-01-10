@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:whatsapp/Home.dart';
+import 'package:whatsapp/RouteGenerator.dart';
 import 'package:whatsapp/model/Usuario.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Cadastro extends StatefulWidget {
   @override
@@ -67,11 +69,13 @@ class _CadastroState extends State<Cadastro> {
           password: usuario.senha
       ).then((firebaseUser){
 
-        Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => Home()
-            )
-        );
+        //Salvar dados do usuário
+        FirebaseFirestore db = FirebaseFirestore.instance;
+        db.collection("usuarios")
+        .doc(firebaseUser.user.uid)
+        .set(usuario.toMap());
+
+        Navigator.pushNamedAndRemoveUntil(context, RouteGenerator.ROTA_HOME, (_) => false);
 
       }).catchError((error){
           print("erro: "+ error.toString());
@@ -79,6 +83,8 @@ class _CadastroState extends State<Cadastro> {
             _mengagemErro = "Erro ao cadastrar usuário, verifique os campos e cadastre novamente";
           });
       });
+
+    //Navigator.pushReplacementNamed(context, RouteGenerator.ROTA_HOME);
 
   }
 

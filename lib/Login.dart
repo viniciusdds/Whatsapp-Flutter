@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:whatsapp/Cadastro.dart';
 import 'package:whatsapp/Home.dart';
+import 'package:whatsapp/RouteGenerator.dart';
 import 'package:whatsapp/controller/validacao_controller.dart';
 
 import 'model/Usuario.dart';
@@ -25,8 +26,6 @@ class _LoginState extends State<Login> {
     //Recupera dados dos campos
     String email = _controllerEmail.text;
     String senha = _controllerSenha.text;
-
-
 
       if(email.isNotEmpty && email.contains("@")){
 
@@ -61,11 +60,7 @@ class _LoginState extends State<Login> {
         email: usuario.email,
         password: usuario.senha
     ).then((firebaseUser) {
-      Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => Home()
-          )
-      );
+       Navigator.pushReplacementNamed(context, RouteGenerator.ROTA_HOME);
     }).catchError((error){
         setState(() {
            _mengagemErro = "Erro ao autenticar usuário, verifique e-mail e senha e tente novamente!";
@@ -77,15 +72,11 @@ class _LoginState extends State<Login> {
   Future _verificaUsuarioLogado() async {
 
     FirebaseAuth auth = FirebaseAuth.instance;
-    auth.signOut();
+    //auth.signOut();
 
     User usuarioLogado = await auth.currentUser;
     if(usuarioLogado != null){
-        Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => Home()
-            )
-        );
+      Navigator.pushReplacementNamed(context, RouteGenerator.ROTA_HOME);
     }
 
   }
@@ -167,16 +158,7 @@ class _LoginState extends State<Login> {
                         borderRadius: BorderRadius.circular(32)
                       ),
                       onPressed: () async {
-
-                            // _validarCampos();
-
-                            var result = await validarCampos.validarCampos(_controllerEmail.text, _controllerSenha.text, context, "Login");
-
-                            print("view: "+result);
-
-                            setState(() {
-                             _mengagemErro = result;
-                           });
+                          _validarCampos();
                       }
                   ),
                 ),
