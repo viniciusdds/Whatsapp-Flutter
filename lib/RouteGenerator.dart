@@ -3,6 +3,7 @@ import 'package:whatsapp/Cadastro.dart';
 import 'package:whatsapp/Configuracoes.dart';
 import 'package:whatsapp/Home.dart';
 import 'package:whatsapp/Login.dart';
+import 'package:whatsapp/Mensagens.dart';
 
 class RouteGenerator {
 
@@ -10,8 +11,11 @@ class RouteGenerator {
   static const String ROTA_HOME = "/home";
   static const String ROTA_CADASTRO = "/cadastro";
   static const String ROTA_CONFIGURACOES = "/configuracoes";
+  static const String ROTA_MENSAGENS = "/mensagens";
 
   static Route<dynamic> generateRoute(RouteSettings settings){
+
+    final args = settings.arguments;
 
     switch(settings.name){
       case "/":
@@ -39,6 +43,11 @@ class RouteGenerator {
             builder: (_) => Configuracoes()
         );
       break;
+      case ROTA_MENSAGENS:
+        return MaterialPageRoute(
+            builder: (_) => Mensagens(args)
+        );
+        break;
       default:
         _erroRota();
     }
