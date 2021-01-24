@@ -8,7 +8,7 @@ class Mensagem {
 
   //Define o tipo da mensagem, que pode ser "texto" ou "imagem"
   String _tipo;
-  Timestamp data;
+  String _data;
 
   Mensagem();
 
@@ -22,6 +22,13 @@ class Mensagem {
     };
 
     return map;
+  }
+
+
+  String get data => _data;
+
+  set data(String value) {
+    _data = value;
   }
 
   String get tipo => _tipo;

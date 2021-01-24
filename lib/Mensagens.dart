@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:whatsapp/model/Conversa.dart';
 import 'package:whatsapp/model/Mensagem.dart';
@@ -27,6 +30,10 @@ class _MensagensState extends State<Mensagens> {
   FirebaseFirestore db = FirebaseFirestore.instance;
 
   TextEditingController _controllerMensagem = TextEditingController();
+
+  final _controller = StreamController<QuerySnapshot>.broadcast();
+  ScrollController _scrollController = ScrollController();
+
   Widget _result;
 
   _enviarMensagem(){
@@ -36,10 +43,9 @@ class _MensagensState extends State<Mensagens> {
       mensagem.idUsuario  = idUsuarioLogado;
       mensagem.mensagem   = textoMensagem;
       mensagem.urlImagem  = "";
+      mensagem.data       = Timestamp.now().toString();
       mensagem.tipo       = "texto";
-      mensagem.data       = Timestamp.now();
 
-      print(mensagem.data);
 
       //Salvar mensagem para remetente
       _salvarMensagem(idUsuarioLogado, idUsuarioDestinatario, mensagem);
@@ -155,8 +161,8 @@ class _MensagensState extends State<Mensagens> {
     mensagem.idUsuario  = idUsuarioLogado;
     mensagem.mensagem   = "";
     mensagem.urlImagem  = url;
+    mensagem.data       = Timestamp.now().toString();
     mensagem.tipo       = "imagem";
-    mensagem.data       = Timestamp.now();
 
     //Salvar mensagem para remetente
     _salvarMensagem(idUsuarioLogado, idUsuarioDestinatario, mensagem);
@@ -201,8 +207,23 @@ class _MensagensState extends State<Mensagens> {
       idUsuarioDestinatario =  widget.contato.idUsuario;
     });
 
-//    print("Firestore: " + idUsuarioDestinatario);
-//    print("Firestore: " + idUsuarioLogado);
+    _adicionarListenerMensagens();
+  }
+
+  Stream<QuerySnapshot> _adicionarListenerMensagens(){
+
+    final stream = db.collection("mensagens")
+        .doc( idUsuarioLogado )
+        .collection(idUsuarioDestinatario)
+         .orderBy("data", descending:  false)
+        .snapshots();
+
+    stream.listen((dados){
+      _controller.add( dados );
+      Timer(Duration(seconds: 1), (){
+        _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+      });
+    });
 
   }
 
@@ -214,9 +235,6 @@ class _MensagensState extends State<Mensagens> {
 
   @override
   Widget build(BuildContext context) {
-
-//    print("Widget: "+idUsuarioDestinatario);
-//    print("Widget: "+idUsuarioLogado);
 
     return Scaffold(
       appBar: AppBar(
@@ -263,12 +281,7 @@ class _MensagensState extends State<Mensagens> {
 
                   StreamBuilder(
                     //stream: _controller.stream,
-                    stream: db
-                        .collection("mensagens")
-                        .doc(idUsuarioLogado)
-                        .collection(idUsuarioDestinatario)
-                        .orderBy("data", descending: false)
-                        .snapshots(),
+                    stream: _controller.stream,
                     builder: (context, snapshot){
 
                       switch(snapshot.connectionState){
@@ -295,6 +308,7 @@ class _MensagensState extends State<Mensagens> {
                           }else{
                             _result = Expanded(
                               child: ListView.builder(
+                                  controller: _scrollController,
                                   itemCount: querySnapshot.docs.length,
                                   itemBuilder: (context, index){
 
@@ -382,12 +396,17 @@ class _MensagensState extends State<Mensagens> {
                             ),
                           ),
                         ),
-                        FloatingActionButton(
-                          backgroundColor: Color(0xff075e54),
-                          child: Icon(Icons.send, color: Colors.white),
-                          mini: true,
-                          onPressed: _enviarMensagem,
-                        )
+                        Platform.isIOS
+                            ? CupertinoButton(
+                                  child: Text("Enviar"),
+                                  onPressed: _enviarMensagem,
+                              )
+                            :  FloatingActionButton(
+                                  backgroundColor: Color(0xff075e54),
+                                  child: Icon(Icons.send, color: Colors.white),
+                                  mini: true,
+                                  onPressed: _enviarMensagem,
+                                )
                       ],
                     ),
                   )
